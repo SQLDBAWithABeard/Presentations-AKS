@@ -2,8 +2,14 @@ variable "presentation" {
     description = "The name of the presentation - used for tagging Azure resources so I know what they belong to"
     default = "__Presentation__"
 }
-variable "client_id" {}
-variable "client_secret" {}
+variable "client_id" {
+   description = "The client id for the service principal account"
+    default = "__client_id__"
+}
+variable "client_secret" {
+    description = "The client secret for the service principal account"
+    default = "__client_secret__"
+}
 
 variable "agent_count" {
     default = 3
