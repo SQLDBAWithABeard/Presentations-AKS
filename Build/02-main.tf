@@ -54,15 +54,67 @@ resource "azurerm_kubernetes_cluster" "aks" {
   tags              = {Environment =  "${var.presentation}"}
 }
 
-resource "kubernetes_pod" "test" {
+resource "kubernetes_namespace" "Dev" {
   metadata {
-    name = "terraform-example"
+    labels {
+      mylabel = "Place for Dev"
+    }
+
+    name = "Dev"
+  }
+}
+
+resource "kubernetes_namespace" "Test" {
+  metadata {
+    labels {
+      mylabel = "Place for Test"
+    }
+
+    name = "Test"
+  }
+}
+
+resource "kubernetes_namespace" "Prod" {
+  metadata {
+    labels {
+      mylabel = "Place for Prod"
+    }
+
+    name = "Prod"
+  }
+}
+
+resource "kubernetes_pod" "sql2019" {
+  metadata {
+    namespace = "${kubernetes_namespace.Dev.name}"
   }
 
   spec {
     container {
-      image = "nginx:1.7.9"
-      name  = "example"
+      image = "mcr.microsoft.com/mssql/server:2019-CTP2.4-ubuntu"
+      name  = "sql2019"
+
+      env = {
+        SA_PASSWORD = "Password0!"
+        ACCEPT_EULA = "Y"
+      port = 1433
+
+      }
     }
   }
 }
+
+resource "kubernetes_service" "sqlserver2019" {
+  metadata {
+    name = "sqlserver2019-service"
+  }
+  spec {
+    session_affinity = "ClientIP"
+    port {
+      port = 1433
+      target_port = 1433
+    }
+    type = "LoadBalancer"
+  }
+}
+
