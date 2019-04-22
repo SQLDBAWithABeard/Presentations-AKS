@@ -108,7 +108,9 @@ resource "kubernetes_pod" "sql2019" {
         value = "Y"
       }
 
-      port = [1433]
+      port {
+        container_port = 1433
+      }
     }
   }
 }
