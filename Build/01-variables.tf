@@ -2,49 +2,29 @@ variable "presentation" {
     description = "The name of the presentation - used for tagging Azure resources so I know what they belong to"
     default = "__Presentation__"
 }
-variable "client_id" {
-   description = "The client id for the service principal account"
-    default = "__client_id__"
-}
-variable "client_secret" {
-    description = "The client secret for the service principal account"
-    default = "__client_secret__"
+
+variable "ResourceGroupName" {
+  description = "The Resource Group Name"
+   default =   "__ResourceGroupName__"
 }
 
-variable "agent_count" {
-    default = 3
+variable "location" {
+  description = "The Azure Region in which the resources in this example should exist"
+   default =   "__location__"
 }
 
 variable "ssh_public_key" {
-    default = "~/.ssh/id_rsa.pub"
+   type         = "string"
+   default      = ""
+   description  = "Public key for aksadmin's SSH access."
 }
 
-variable "dns_prefix" {
-    default = "k8stest"
+variable "agent_count" {
+   description  = "The number of Nodes to provision"
+   default =  "__agent_count__"
 }
 
-variable cluster_name {
-    default = "k8stest"
-}
-
-variable resource_group_name {
-    default = "azure-k8stest"
-}
-
-variable location {
-    default = "Central US"
-}
-
-variable log_analytics_workspace_name {
-    default = "testLogAnalyticsWorkspaceName"
-}
-
-# refer https://azure.microsoft.com/global-infrastructure/services/?products=monitor for log analytics available regions
-variable log_analytics_workspace_location {
-    default = "eastus"
-}
-
-# refer https://azure.microsoft.com/pricing/details/monitor/ for log analytics pricing 
-variable log_analytics_workspace_sku {
-    default = "PerGB2018"
+variable "VMSize" {
+  description = "The size of the VM such as Standard_DS1_v2"
+   default =   "__VMSize__"
 }
