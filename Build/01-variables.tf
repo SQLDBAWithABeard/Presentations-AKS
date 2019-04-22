@@ -28,3 +28,15 @@ variable "VMSize" {
   description = "The size of the VM such as Standard_DS1_v2"
    default =   "__VMSize__"
 }
+variable "ClusterName" {
+  description = "The name of the cluster"
+   default =   "__ClusterName__"
+}
+variable "AgentPoolName" {
+  description = "The name of the AgentPool"
+   default =   "__AgentPoolName__"
+}
+variable "ServiceName" {
+  description = "The name of the ServiceName"
+   default =   "__ServiceName__"
+}

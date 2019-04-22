@@ -8,7 +8,7 @@ terraform {
   }
 }
 locals {
-    cluster_name            = "aks-${random_string.aks.result}"
+    cluster_name            = "${var.ClusterName}-${random_string.aks.result}"
 }
 
 module "service_principal" {
@@ -22,7 +22,7 @@ resource "azurerm_resource_group" "aks" {
 }
 
 resource "random_string" "aks" {
-  length  = 8
+  length  = 4
   lower   = true
   number  = true
   upper   = true
@@ -39,7 +39,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   ]
 
   agent_pool_profile {
-    name            = "default"
+    name            = "${var.AgentPoolName}"
     count           = "${var.agent_count}"
     vm_size         = "${var.VMSize}"
     os_type         = "Linux"
@@ -106,7 +106,7 @@ resource "kubernetes_pod" "sql2019" {
 
 resource "kubernetes_service" "sqlserver2019" {
   metadata {
-    name = "sqlserver2019-service"
+    name = "${var.ServiceName}"
   }
   spec {
     session_affinity = "ClientIP"
