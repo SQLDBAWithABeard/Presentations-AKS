@@ -9,8 +9,6 @@ terraform {
 }
 locals {
     cluster_name            = "aks-${random_string.aks.result}"
-    default_ssh_public_key  = "${file("~/.ssh/id_rsa.pub")}"
-    ssh_public_key          = "${var.ssh_public_key != "" ? var.ssh_public_key : local.default_ssh_public_key }"
 }
 
 module "service_principal" {
