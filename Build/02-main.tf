@@ -92,6 +92,9 @@ resource "kubernetes_pod" "sql2019" {
   metadata {
     namespace = "${kubernetes_namespace.Dev.metadata.0.name}"
     name = "sql2019pod"
+        labels {
+      app = "SQL"
+    }
   }
 
   spec {
@@ -123,6 +126,9 @@ resource "kubernetes_service" "sqlserver2019" {
   }
 
   spec {
+        selector {
+      app = "${kubernetes_pod.sql2019.metadata.0.labels.app}"
+    }
     session_affinity = "ClientIP"
 
     port {
