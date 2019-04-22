@@ -2,12 +2,6 @@ provider "azurerm" {
   version = "=1.24.0"
 }
 
-terraform {
-  backend "azurerm" {
-    key = "terraform.tfstate"
-  }
-}
-
 resource "azurerm_azuread_application" "aks_app" {
     name = "${var.sp_name}"
 }
