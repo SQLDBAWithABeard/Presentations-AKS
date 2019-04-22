@@ -116,6 +116,7 @@ resource "kubernetes_pod" "sql2019" {
 resource "kubernetes_service" "sqlserver2019" {
   metadata {
     name = "${var.ServiceName}"
+    namespace = "${kubernetes_namespace.Dev.name}"
   }
 
   spec {
