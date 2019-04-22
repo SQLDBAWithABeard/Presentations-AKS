@@ -90,7 +90,7 @@ resource "kubernetes_namespace" "Prod" {
 
 resource "kubernetes_pod" "sql2019" {
   metadata {
-    namespace = "${kubernetes_namespace.Dev}"
+    namespace = "${kubernetes_namespace.Dev.metadata.name}"
   }
 
   spec {
@@ -118,7 +118,7 @@ resource "kubernetes_pod" "sql2019" {
 resource "kubernetes_service" "sqlserver2019" {
   metadata {
     name = "${var.ServiceName}"
-    namespace = "${kubernetes_namespace.Dev}"
+    namespace = "${kubernetes_namespace.Dev.metadata.name}"
   }
 
   spec {
