@@ -51,7 +51,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     client_secret   = "${module.service_principal.client_secret}"
   }
 
-  tags              = "${var.presentation}"
+  tags              = {Environment =  "${var.presentation}"}
 }
 
 resource "kubernetes_pod" "test" {

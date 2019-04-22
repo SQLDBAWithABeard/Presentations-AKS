@@ -17,7 +17,7 @@ module "service_principal" {
 }
 
 resource "azurerm_resource_group" "aks" {
-    name     = "${var.resource_group_name}"
+    name     = "${var.ResourceGroupName}"
     location = "${var.location}"
 }
 
@@ -38,18 +38,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
       "module.service_principal"
   ]
 
-  linux_profile {
-    admin_username  = "aksadmin"
-
-    ssh_key {
-      key_data = "${local.ssh_public_key}"
-    }
-  }
-
   agent_pool_profile {
     name            = "default"
     count           = "${var.agent_count}"
-    vm_size         = "${var.vm_size}"
+    vm_size         = "${var.VMSize}"
     os_type         = "Linux"
     os_disk_size_gb = 30
   }
@@ -59,7 +51,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     client_secret   = "${module.service_principal.client_secret}"
   }
 
-  tags              = "${var.tags}"
+  tags              = {Environment =  "${var.presentation}"}
 }
 
 resource "kubernetes_pod" "test" {
