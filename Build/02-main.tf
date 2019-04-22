@@ -108,11 +108,11 @@ resource "kubernetes_pod" "sql2019" {
         value = "Y"
       }
 
-      port = 1433
+      port = [1433]
     }
   }
 }
-
+      
 resource "kubernetes_service" "sqlserver2019" {
   metadata {
     name = "${var.ServiceName}"
