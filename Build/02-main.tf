@@ -7,18 +7,19 @@ terraform {
     key = "terraform.tfstate"
   }
 }
+
 locals {
-    cluster_name            = "${var.ClusterName}-${random_string.aks.result}"
+  cluster_name = "${var.ClusterName}-${random_string.aks.result}"
 }
 
 module "service_principal" {
-    source    = "service_principal"
-    sp_name   = "${local.cluster_name}"
+  source  = "service_principal"
+  sp_name = "${local.cluster_name}"
 }
 
 resource "azurerm_resource_group" "aks" {
-    name     = "${var.ResourceGroupName}"
-    location = "${var.location}"
+  name     = "${var.ResourceGroupName}"
+  location = "${var.location}"
 }
 
 resource "random_string" "aks" {
@@ -34,8 +35,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location            = "${azurerm_resource_group.aks.location}"
   resource_group_name = "${azurerm_resource_group.aks.name}"
   dns_prefix          = "${local.cluster_name}"
-  depends_on          = [
-      "module.service_principal"
+
+  depends_on = [
+    "module.service_principal",
   ]
 
   agent_pool_profile {
@@ -47,40 +49,42 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   service_principal {
-    client_id       = "${module.service_principal.client_id}"
-    client_secret   = "${module.service_principal.client_secret}"
+    client_id     = "${module.service_principal.client_id}"
+    client_secret = "${module.service_principal.client_secret}"
   }
 
-  tags              = {Environment =  "${var.presentation}"}
+  tags = {
+    Environment = "${var.presentation}"
+  }
 }
 
 resource "kubernetes_namespace" "Dev" {
   metadata {
     labels {
-      mylabel = "Place for Dev"
+      mylabel = "Place_for_Dev"
     }
 
-    name = "Dev"
+    name = "dev"
   }
 }
 
 resource "kubernetes_namespace" "Test" {
   metadata {
     labels {
-      mylabel = "Place for Test"
+      mylabel = "Place_for_Test"
     }
 
-    name = "Test"
+    name = "test"
   }
 }
 
 resource "kubernetes_namespace" "Prod" {
   metadata {
     labels {
-      mylabel = "Place for Prod"
+      mylabel = "Place_for_Prod"
     }
 
-    name = "Prod"
+    name = "prod"
   }
 }
 
@@ -95,11 +99,16 @@ resource "kubernetes_pod" "sql2019" {
       name  = "sql2019"
 
       env = {
-        SA_PASSWORD = "Password0!"
-        ACCEPT_EULA = "Y"
-      port = 1433
-
+        name  = "SA_PASSWORD"
+        value = "Password0!"
       }
+
+      env = {
+        name  = "ACCEPT_EULA"
+        value = "Y"
+      }
+
+      port = 1433
     }
   }
 }
@@ -108,13 +117,15 @@ resource "kubernetes_service" "sqlserver2019" {
   metadata {
     name = "${var.ServiceName}"
   }
+
   spec {
     session_affinity = "ClientIP"
+
     port {
-      port = 1433
+      port        = 1433
       target_port = 1433
     }
+
     type = "LoadBalancer"
   }
 }
-
