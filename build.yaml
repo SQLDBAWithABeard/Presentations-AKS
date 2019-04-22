@@ -1,0 +1,8 @@
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: SQLDBAWithABeard/Presentations-BuildTemplates-Private
+
+jobs:
+- template: AzureTerraform.yml@templates  # Template reference
