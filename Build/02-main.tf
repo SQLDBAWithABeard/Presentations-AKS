@@ -40,14 +40,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
       "module.service_principal"
   ]
 
-  linux_profile {
-    admin_username  = "aksadmin"
-
-    ssh_key {
-      key_data = "${local.ssh_public_key}"
-    }
-  }
-
   agent_pool_profile {
     name            = "default"
     count           = "${var.agent_count}"
