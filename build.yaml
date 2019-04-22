@@ -6,4 +6,4 @@ resources:
       endpoint: SQLDBAWithABeardGitHub
 
 jobs:
-- template: AzureTerraform.yml@templates  # Template reference
+- template: AzureTerraform.yaml@templates  # Template reference
