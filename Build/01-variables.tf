@@ -3,6 +3,11 @@ variable "presentation" {
     default = "__Presentation__"
 }
 
+variable "location" {
+  description = "The Azure Region in which the resources in this example should exist"
+  default     = "__location__"
+}
+
 variable "ResourceGroupName" {
   description = "The Resource Group Name"
    default =   "__ResourceGroupName__"
