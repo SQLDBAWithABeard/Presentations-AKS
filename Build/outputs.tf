@@ -9,7 +9,3 @@ output "host" {
 output "client_certificate" {
   value = "${azurerm_kubernetes_cluster.aks.kube_config.0.client_certificate}"
 }
-
-output "Dev_DNS" {
-  value = "${azurerm_public_ip.devip.domain_name_label}.${var.location}.cloudapp.azure.com"
-}
