@@ -11,5 +11,5 @@ output "client_certificate" {
 }
 
 output "Dev_DNS" {
-  hostname = "${azurerm_public_ip.devip.domain_name_label}.${var.location}.cloudapp.azure.com"
+  value = "${azurerm_public_ip.devip.domain_name_label}.${var.location}.cloudapp.azure.com"
 }
