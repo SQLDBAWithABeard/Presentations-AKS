@@ -131,7 +131,7 @@ resource "kubernetes_service" "sqlserver2019" {
       app = "${kubernetes_pod.sql2019.metadata.0.labels.app}"
     }
 
-    external_ips= ["${azurerm_public_ip.devip.ip_address}"]
+    load_balancer_ip = "${azurerm_public_ip.devip.ip_address}"
 
     session_affinity = "ClientIP"
 
