@@ -13,11 +13,6 @@ variable "ResourceGroupName" {
    default =   "__ResourceGroupName__"
 }
 
-variable "location" {
-  description = "The Azure Region in which the resources in this example should exist"
-   default =   "__location__"
-}
-
 variable "ssh_public_key" {
    type         = "string"
    default      = ""

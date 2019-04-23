@@ -146,7 +146,7 @@ resource "kubernetes_service" "sqlserver2019" {
 
 resource "azurerm_public_ip" "devip" {
   name                = "aksdevnamespaceip"
-  location            = "$${var.location}"
+  location            = "${var.location}"
   resource_group_name = "${azurerm_resource_group.aks.name}"
   allocation_method   = "Static"
   domain_name_label = "beardaksdev"
