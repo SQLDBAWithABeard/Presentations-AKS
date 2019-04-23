@@ -115,6 +115,11 @@ resource "kubernetes_pod" "sql2019" {
       port {
         container_port = 1433
       }
+
+      volume_mount = {
+        name = "sqlvolume"
+        mountPath = "/var/opt/mssql"
+      }
     }
   }
 }
@@ -137,5 +142,37 @@ resource "kubernetes_service" "sqlserver2019" {
     }
 
     type = "LoadBalancer"
+  }
+}
+
+resource "kubernetes_persistent_volume_claim" "sqlvolumeclaim" {
+  metadata {
+    name = "sqlvolumeclaim"
+  }
+  spec {
+    access_modes = ["ReadWriteMany"]
+    resources {
+      requests {
+        storage = "5Gi"
+      }
+    }
+    volume_name = "${kubernetes_persistent_volume.sqlvolume.metadata.0.name}"
+  }
+}
+
+resource "kubernetes_persistent_volume" "sqlvolume" {
+  metadata {
+    name = "sqlvolume"
+  }
+  spec {
+    capacity {
+      storage = "10Gi"
+    }
+    access_modes = ["ReadWriteMany"]
+    persistent_volume_source {
+            azure_disk {
+        pd_name = "sqldata"
+      }
+    }
   }
 }
