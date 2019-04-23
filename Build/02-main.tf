@@ -131,10 +131,6 @@ resource "kubernetes_service" "sqlserver2019" {
       app = "${kubernetes_pod.sql2019.metadata.0.labels.app}"
     }
 
-    load_balancer_ingress = {
-hostname = "${azurerm_public_ip.devip.domain_name_label}.${var.location}.cloudapp.azure.com"
-    }
-
     session_affinity = "ClientIP"
 
     port {
@@ -143,6 +139,7 @@ hostname = "${azurerm_public_ip.devip.domain_name_label}.${var.location}.cloudap
     }
 
     type = "LoadBalancer"
+    load_balancer_ip = "${azurerm_public_ip.devip.ip_address}"
   }
 }
 
