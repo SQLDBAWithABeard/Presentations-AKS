@@ -91,8 +91,9 @@ resource "kubernetes_namespace" "Prod" {
 resource "kubernetes_pod" "sql2019" {
   metadata {
     namespace = "${kubernetes_namespace.Dev.metadata.0.name}"
-    name = "sql2019pod"
-        labels {
+    name      = "sql2019pod"
+
+    labels {
       app = "SQL"
     }
   }
@@ -115,25 +116,23 @@ resource "kubernetes_pod" "sql2019" {
       port {
         container_port = 1433
       }
-
-      volume_mount = {
-        name = "sqlvolume"
-        mountPath = "/var/opt/mssql"
-      }
     }
   }
 }
-      
+
 resource "kubernetes_service" "sqlserver2019" {
   metadata {
-    name = "${var.ServiceName}"
+    name      = "${var.ServiceName}"
     namespace = "${kubernetes_namespace.Dev.metadata.0.name}"
   }
 
   spec {
-        selector {
+    selector {
       app = "${kubernetes_pod.sql2019.metadata.0.labels.app}"
     }
+
+    external_ips= ["${azurerm_public_ip.devip.ip_address}"]
+
     session_affinity = "ClientIP"
 
     port {
@@ -145,34 +144,14 @@ resource "kubernetes_service" "sqlserver2019" {
   }
 }
 
-resource "kubernetes_persistent_volume_claim" "sqlvolumeclaim" {
-  metadata {
-    name = "sqlvolumeclaim"
-  }
-  spec {
-    access_modes = ["ReadWriteMany"]
-    resources {
-      requests {
-        storage = "5Gi"
-      }
-    }
-    volume_name = "${kubernetes_persistent_volume.sqlvolume.metadata.0.name}"
-  }
-}
+resource "azurerm_public_ip" "devip" {
+  name                = "aksdevnamespaceip"
+  location            = "$${var.location}"
+  resource_group_name = "${azurerm_resource_group.aks.name}"
+  allocation_method   = "Static"
+  domain_name_label = "beardaksdev"
 
-resource "kubernetes_persistent_volume" "sqlvolume" {
-  metadata {
-    name = "sqlvolume"
-  }
-  spec {
-    capacity {
-      storage = "10Gi"
-    }
-    access_modes = ["ReadWriteMany"]
-    persistent_volume_source {
-            azure_disk {
-        pd_name = "sqldata"
-      }
-    }
+  tags = {
+    environment = "dev"
   }
 }
