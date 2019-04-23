@@ -88,15 +88,31 @@ resource "kubernetes_namespace" "Prod" {
   }
 }
 
-resource "kubernetes_pod" "sql2019" {
+resource "kubernetes_deployment" "sql2019" {
   metadata {
-    namespace = "${kubernetes_namespace.Dev.metadata.0.name}"
-    name      = "sql2019pod"
-
+      namespace = "${kubernetes_namespace.Dev.metadata.0.name}"
+    name = "sql2019deployment"
     labels {
       app = "SQL"
     }
   }
+
+  spec {
+    replicas = 1
+
+    selector {
+      match_labels {
+         app = "SQL"
+      }
+    }
+
+    template {
+      metadata {
+        
+        labels {
+           app = "SQL"
+        }
+      }
 
   spec {
     container {
@@ -118,8 +134,9 @@ resource "kubernetes_pod" "sql2019" {
       }
     }
   }
+    }
+  }
 }
-
 resource "kubernetes_service" "sqlserver2019" {
   metadata {
     name      = "${var.ServiceName}"
@@ -128,7 +145,7 @@ resource "kubernetes_service" "sqlserver2019" {
 
   spec {
     selector {
-      app = "${kubernetes_pod.sql2019.metadata.0.labels.app}"
+      app = "${kubernetes_deployment.sql2019.metadata.0.labels.app}"
     }
 
     session_affinity = "ClientIP"
@@ -139,18 +156,5 @@ resource "kubernetes_service" "sqlserver2019" {
     }
 
     type = "LoadBalancer"
-    load_balancer_ip = "${azurerm_public_ip.devip.ip_address}"
-  }
-}
-
-resource "azurerm_public_ip" "devip" {
-  name                = "aksdevnamespaceip"
-  location            = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.aks.name}"
-  allocation_method   = "Static"
-  domain_name_label = "beardaksdev"
-
-  tags = {
-    environment = "dev"
   }
 }
